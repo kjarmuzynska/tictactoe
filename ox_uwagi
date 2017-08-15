@@ -1,0 +1,13 @@
+plansza macierz
+
+jesli AI, to potrzeba pozycji, mozna losowo wygenerowac i przypisac wartosc, ale czy wtedy nie rozsadniej byloby rozpisac algorytm?
+
+import numpy as np
+class Board(N):
+
+	def __init__(self,N):
+		self.n = N
+
+	def create_board(self):
+		self.
+
