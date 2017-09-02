@@ -12,6 +12,8 @@ from board import Board
 import cocos
 
 class TBoard(cocos.layer.Layer):
+	is_event_handler = True
+
 	def __init__(self, board):
 		super( TBoard, self ).__init__()
 		self.schedule( self.step )
@@ -54,12 +56,34 @@ class TBoard(cocos.layer.Layer):
 			linex = Line(a=(0, x), b=(y,x), z=1, color=(1,1,1,1), stroke=stro)
 			linex.render()
 
-
 	def draw( self ):
 		self.drawBoard()
-		
+		for x in range(self.board.n):
+			for y in range(self.board.n):
+				posXY=[x, y]
+				if self.board.symbolAt(posXY) == self.board.O:
+					self.drawO(posXY)
+				elif self.board.symbolAt(posXY) == self.board.X:
+					self.drawX(posXY)
 
-		pass
+	def onClicked(self, posXY):
+		print("%s %s " %(posXY[0], posXY[1]) )
+		#board.setSymbol(posXY, Board.O)
+
+
+	def on_mouse_press (self, x, y, buttons, modifiers):
+		posXY = self.Pixels_to_matrix(x, y)
+		if self.board.isPositionInside(posXY) and self.board.legalMove(self.board.xyToIndex(posXY)):
+			self.onClicked(posXY)
+		else:
+			print('be')
+
+	def Pixels_to_matrix(self, x, y):
+		pos_x=x//self.cell_size
+		pos_y=self.board.n-1-y//self.cell_size
+		return [pos_x, pos_y]
+
+
 
 
 if __name__ == "__main__":
