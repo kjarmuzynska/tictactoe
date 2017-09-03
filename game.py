@@ -9,6 +9,7 @@ class Game:
 		self._win = False
 		self.players = players
 		self.board=Board(3)
+		self.currentPlayer = 0
 
 	def currentSymbol(self):
 		if self.currentTurn % 2 == 0:
@@ -53,21 +54,28 @@ class Game:
 
 	def _doTurn(self, player):
 		index = player.chooseMove(self)
+		if index == -1: #jeśli gracz zwrócił -1, znaczy, że nie jest gotowy teraz żeby podjąć decyzję, i zrobi to później
+			return False
 		if not self.board.legalMove(index):
 			raise ValueError("Illegal move")
 		self.board.setSymbolAtIndex(index, self.currentSymbol())
 		self._win = self.isSymbolWinning(index)
+		return True
 
 	def play(self):
 		while True:
-			for player in self.players:
-				self._doTurn(player)
-				if self.win() or self.draw():
-					return
-				self.currentTurn += 1
+			player = self.players[self.currentPlayer]
 
-g = Game(3, [players.PlayerHuman(), players.PlayerHuman()])
-g.play()
+			if not self._doTurn(player):
+				return #jeśli doTUrn zwróciło false, znaczy że gracz się namyśla, i gra jest wstrzymana aż nie wybierze ruchu
+			if self.win() or self.draw():
+				return
+			self.currentTurn += 1
+			self.currentPlayer = (self.currentPlayer + 1) % len(self.players)
+
+if __name__ == "__main__":
+	g = Game(3, [players.PlayerHuman(), players.PlayerHuman()])
+	g.play()
 
 #print(b.isSymbolWinning(1))
 #print(b.symbolsInLine([0,0], [1,0], Board.X))

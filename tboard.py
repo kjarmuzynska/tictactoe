@@ -19,6 +19,10 @@ class TBoard(cocos.layer.Layer):
 		self.schedule( self.step )
 		self.board = board
 		self.cell_size = 100
+		self._listeners = []
+
+	def addListener(self, listener):
+		self._listeners.append(listener)
 
 	def step(self,dt):
 		pass
@@ -67,7 +71,8 @@ class TBoard(cocos.layer.Layer):
 					self.drawX(posXY)
 
 	def onClicked(self, posXY):
-		print("%s %s " %(posXY[0], posXY[1]) )
+		for listener in self._listeners:
+			listener.onClicked(posXY)
 		#board.setSymbol(posXY, Board.O)
 
 
@@ -82,7 +87,6 @@ class TBoard(cocos.layer.Layer):
 		pos_x=x//self.cell_size
 		pos_y=self.board.n-1-y//self.cell_size
 		return [pos_x, pos_y]
-
 
 
 

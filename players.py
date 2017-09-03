@@ -18,7 +18,7 @@ class PlayerHuman(Player):
 
 class PlayerRandomAI(Player):
 	def chooseMove(self, game):
-		maxRange = len(game.board.arr) - game.board.currentTurn
+		maxRange = len(game.board.arr) - game.currentTurn
 		randomField = rnd.randrange(maxRange)
 
 		for i in range(len(game.board.arr)):
