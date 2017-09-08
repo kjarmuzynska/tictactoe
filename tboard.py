@@ -18,8 +18,13 @@ class TBoard(cocos.layer.Layer):
 		super( TBoard, self ).__init__()
 		self.schedule( self.step )
 		self.board = board
-		self.cell_size = 100
+		self.cell_size = 60
 		self._listeners = []
+		self.frameWidth = 2
+		self.colorFrame = (0.85, 0.84, 0.89, 0.5)
+		self.colorX = (0.18, 0.73, 0.76, 1)
+		self.colorO = (0.28, 0.2, 1.0, 1)  
+
 
 	def addListener(self, listener):
 		self._listeners.append(listener)
@@ -38,26 +43,25 @@ class TBoard(cocos.layer.Layer):
 		for x in [-1, 1]:
 			for y in [-1, 1]:
 				L=self.cell_size/2*0.8
-				line=Line(a=(px+x*L, py+y*L), b=(px,py), z=1, color=(1,1,1,1), stroke=5)
+				line=Line(a=(px+x*L, py+y*L), b=(px,py), z=1, color=self.colorX, stroke=5)
 				line.render()
 
 
 	def drawO(self, posXY):
 		[px, py]=self.boardPositionToPixelCenter(posXY)
-		circle = Circle(x=px, y=py, z=1, width=self.cell_size*0.9, color=(1,1,1,1), stroke=5)
+		circle = Circle(x=px, y=py, z=1, width=self.cell_size*0.9, color=self.colorO, stroke=5)
 		circle.render()
 
 
 	def drawBoard(self):
 		n = self.board.n
-		stro=5
 		for i in range(n-1):
 			x=(i+1)*(self.cell_size)
 			y=n*(self.cell_size)
-			liney = Line(a=(x, 0), b=(x,y), z=1, color=(1,1,1,1), stroke=stro)
+			liney = Line(a=(x, 0), b=(x,y), z=1, color=self.colorFrame, stroke=self.frameWidth)
 			liney.render()
 
-			linex = Line(a=(0, x), b=(y,x), z=1, color=(1,1,1,1), stroke=stro)
+			linex = Line(a=(0, x), b=(y,x), z=1, color=self.colorFrame, stroke=self.frameWidth)
 			linex.render()
 
 	def draw( self ):

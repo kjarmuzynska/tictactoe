@@ -3,12 +3,12 @@ from board import Board
 import players
 
 class Game:
-	def __init__(self,N,players):
-		self.symbolsToWin = 3
+	def __init__(self,N,W,players):
+		self.symbolsToWin = W
 		self.currentTurn = 0
 		self._win = False
 		self.players = players
-		self.board=Board(3)
+		self.board=Board(N)
 		self.currentPlayer = 0
 
 	def currentSymbol(self):
@@ -74,7 +74,7 @@ class Game:
 			self.currentPlayer = (self.currentPlayer + 1) % len(self.players)
 
 if __name__ == "__main__":
-	g = Game(3, [players.PlayerHuman(), players.PlayerHuman()])
+	g = Game(3, 3, [players.PlayerHuman(), players.PlayerHuman()])
 	g.play()
 
 #print(b.isSymbolWinning(1))

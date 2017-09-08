@@ -28,19 +28,25 @@ class PlayerHumanT(players.Player):
 		print("Player wants to move %s %s " %(posXY[0], posXY[1]) )
 		if not self.game:
 			return
+		index = game.board.xyToIndex(posXY)
+		#głupie rozwiązanie, poprawić
+		if not self.game.board.legalMove(index):
+			return
+
 		self.selectedPosition = posXY
+
 		self.game.play()
 		self.game = None
 
 if __name__ == "__main__":
 	# director init takes the same arguments as pyglet.window
-	cocos.director.director.init()
+	cocos.director.director.init(width=1280, height=1024)
 
 	# We create a new layer, an instance of HelloWorld
 	player1 = PlayerHumanT()
 	player2 = PlayerHumanT()
 	#game = Game(3, [players.PlayerRandomAI(), player1])
-	game = Game(3, [player1, player2])
+	game = Game(15, 5,  [player1, player2])
 	game.play()
 
 	tboard = TBoard(game.board)
