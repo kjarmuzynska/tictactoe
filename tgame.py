@@ -34,8 +34,9 @@ class PlayerHumanT(players.Player):
 
 		self.selectedPosition = posXY
 
-		self.game.play()
+		game = self.game
 		self.game = None
+		game.play()
 
 def LaunchGame(game):
 	# director init takes the same arguments as pyglet.window
