@@ -9,6 +9,9 @@ class Game:
 		self._win = False
 		self.players = players
 		self.board=Board(N)
+		for i in self.players:
+			i.activate(self)
+
 		self.currentPlayer = 0
 
 	def currentSymbol(self):
@@ -76,6 +79,7 @@ class Game:
 if __name__ == "__main__":
 	g = Game(3, 3, [players.PlayerHuman(), players.PlayerHuman()])
 	g.play()
+
 
 #print(b.isSymbolWinning(1))
 #print(b.symbolsInLine([0,0], [1,0], Board.X))

@@ -1,7 +1,11 @@
 import numpy as np
 import random as rnd
 
+
 class Player:
+	def activate(self, game):
+		pass
+
 	def chooseMove(self, game):
 		return 0
 

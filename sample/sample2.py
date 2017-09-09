@@ -4,6 +4,7 @@ variable_b = 3
 
 def funckja1():
 	variable_a = 4
+	return 7
 
 def funckja2():
 	global variable_a
@@ -11,7 +12,7 @@ def funckja2():
 
 
 print(variable_a)
-funckja1()
+variable_a=funckja1()
 print(variable_a)
 funckja2()
 print(variable_a)
