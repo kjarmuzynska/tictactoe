@@ -9,6 +9,7 @@ class Game:
 		self._win = False
 		self.players = players
 		self.board=Board(N)
+		self.story=[]
 		for i in self.players:
 			i.activate(self)
 
@@ -57,11 +58,14 @@ class Game:
 
 	def _doTurn(self, player):
 		index = player.chooseMove(self)
+
 		if index == -1: #jeśli gracz zwrócił -1, znaczy, że nie jest gotowy teraz żeby podjąć decyzję, i zrobi to później
 			return False
 		if not self.board.legalMove(index):
 			raise ValueError("Illegal move")
-		self.board.setSymbolAtIndex(index, self.currentSymbol())
+		symbol = self.currentSymbol()
+		self.board.setSymbolAtIndex(index, symbol)
+		self.story.append((index, symbol))
 		self._win = self.isSymbolWinning(index)
 		return True
 

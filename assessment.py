@@ -14,6 +14,13 @@ class PlayerAssessment(Player):
 		self.assessments = np.copy(self.board.arr)
 		super().activate(game)
 
+	def decision_assessment(self):
+		index=np.argmax(self.assessments)
+		self.dev=np.std(self.assessments)
+		self.average = np.average(self.assessments)
+		return index
+
+
 	def drawCell(self, posXY, pixelCenter, cell_size):
 		x=self.board.xyToIndex(posXY)
 		v=self.assessments[x]
@@ -35,11 +42,45 @@ class PlayerRandomAssessment(PlayerAssessment):
 				los=random.random()
 				self.assessments[x]+=los
 			else:
-				self.assessments[x]=-100
-		index=np.argmax(self.assessments)
-		self.dev=np.std(self.assessments)
-		self.average = np.average(self.assessments)
-		return index
+				self.assessments[x]=0
+		return self.decision_assessment()
+
+
+
+class PlayerAssessmentRank(PlayerAssessment):
+
+	def chooseMove(self, game):
+		self.my_symbol = game.currentSymbol()
+		self.last_moves(game)
+		return self.decision_assessment()
+
+	def last_moves(self, game):
+		try:
+			self.add_rank_line(self.game.story[-1], 1)
+			self.add_rank_line(self.game.story[-2], 0)
+		except:
+			pass
+
+
+
+
+
+
+	def add_rank_line(self, move, enemy):
+		#linia, legalny, odpowiednia odleglosc
+		self.last_moves(game)
+		point = self.board.indexToXY(index)
+		dirs = [ [1,-1], [1,0], [1,1], [0,1] ]
+		new_dirs=[]
+		for dir in dirs:
+			for i in [2, 3, 4, 5]:
+				new_dirs.append(np.array(dir)*i)
+
+		symbol = self.board.symbolAt(point)
+		for dir in dirs:
+			symbol = self.symbolsInLine(point, dir, symbol)
+
+		pass
 
 
 
