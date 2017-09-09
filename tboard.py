@@ -14,17 +14,20 @@ import cocos
 class TBoard(cocos.layer.Layer):
 	is_event_handler = True
 
-	def __init__(self, board):
+	def __init__(self, game):
 		super( TBoard, self ).__init__()
 		self.schedule( self.step )
-		self.board = board
+		self.board = game.board
 		self.cell_size = 60
 		self._listeners = []
 		self.frameWidth = 2
 		self.colorFrame = (0.85, 0.84, 0.89, 0.5)
 		self.colorX = (0.18, 0.73, 0.76, 1)
-		self.colorO = (0.28, 0.2, 1.0, 1)  
+		self.colorO = (0.28, 0.2, 1.0, 1)
 
+		for p in game.players:
+			if hasattr(p, 'onClicked'):
+				self.addListener(p)
 
 	def addListener(self, listener):
 		self._listeners.append(listener)

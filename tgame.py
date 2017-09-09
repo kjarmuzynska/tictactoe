@@ -42,16 +42,11 @@ if __name__ == "__main__":
 	# director init takes the same arguments as pyglet.window
 	cocos.director.director.init(width=1280, height=1024)
 
-	# We create a new layer, an instance of HelloWorld
-	player1 = PlayerHumanT()
-	player2 = PlayerHumanT()
 	#game = Game(3, [players.PlayerRandomAI(), player1])
-	game = Game(15, 5,  [player1, player2])
+	game = Game(15, 5,  [PlayerHumanT(), PlayerHumanT()])
 	game.play()
 
-	tboard = TBoard(game.board)
-	tboard.addListener(player1)
-	tboard.addListener(player2)
+	tboard = TBoard(game)
 
 	# A scene that contains the layer hello_layer
 	main_scene = cocos.scene.Scene(tboard)
