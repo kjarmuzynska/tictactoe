@@ -9,6 +9,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 from primitives import Circle, Line
 from board import Board
 
+
 import cocos
 
 class TBoard(cocos.layer.Layer):
@@ -20,6 +21,7 @@ class TBoard(cocos.layer.Layer):
 		self.board = game.board
 		self.cell_size = 60
 		self._listeners = []
+		self._drawers = []
 		self.frameWidth = 2
 		self.colorFrame = (0.85, 0.84, 0.89, 0.5)
 		self.colorX = (0.18, 0.73, 0.76, 1)
@@ -28,6 +30,10 @@ class TBoard(cocos.layer.Layer):
 		for p in game.players:
 			if hasattr(p, 'onClicked'):
 				self.addListener(p)
+
+		for p in game.players:
+			if hasattr(p, 'drawCell'):
+				self._drawers.append(p)
 
 	def addListener(self, listener):
 		self._listeners.append(listener)
@@ -67,15 +73,22 @@ class TBoard(cocos.layer.Layer):
 			linex = Line(a=(0, x), b=(y,x), z=1, color=self.colorFrame, stroke=self.frameWidth)
 			linex.render()
 
+	def drawCell(self, x, y):
+		posXY=[x, y]
+		for drawer in self._drawers:
+			drawer.drawCell(posXY, self.boardPositionToPixelCenter(posXY), self.cell_size)
+
+		if self.board.symbolAt(posXY) == self.board.O:
+			self.drawO(posXY)
+		elif self.board.symbolAt(posXY) == self.board.X:
+			self.drawX(posXY)
+
 	def draw( self ):
 		self.drawBoard()
 		for x in range(self.board.n):
 			for y in range(self.board.n):
-				posXY=[x, y]
-				if self.board.symbolAt(posXY) == self.board.O:
-					self.drawO(posXY)
-				elif self.board.symbolAt(posXY) == self.board.X:
-					self.drawX(posXY)
+				self.drawCell(x, y)
+
 
 	def onClicked(self, posXY):
 		for listener in self._listeners:
