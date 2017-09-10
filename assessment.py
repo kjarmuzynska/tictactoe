@@ -54,22 +54,14 @@ class PlayerAssessmentRank(PlayerAssessment):
 		self.last_moves(game)
 		return self.decision_assessment()
 
-	def last_moves(self, game):
-		try:
-			self.add_rank_line(self.game.story[-1], 1)
-			self.add_rank_line(self.game.story[-2], 0)
-		except:
-			pass
-
-
-
-
 
 
 	def add_rank_line(self, move, enemy):
 		#linia, legalny, odpowiednia odleglosc
+		#jhak gdzie zagra to wywalamy wage?
+
 		self.last_moves(game)
-		point = self.board.indexToXY(index)
+		point = self.board.indexToXY(move)
 		dirs = [ [1,-1], [1,0], [1,1], [0,1] ]
 		new_dirs=[]
 		for dir in dirs:
@@ -77,11 +69,68 @@ class PlayerAssessmentRank(PlayerAssessment):
 				new_dirs.append(np.array(dir)*i)
 
 		symbol = self.board.symbolAt(point)
-		for dir in dirs:
-			symbol = self.symbolsInLine(point, dir, symbol)
+		for n_dir in new_dirs:
+			symbol = self.symbolsInLine(point, n_dir, symbol)
 
 		pass
 
+
+class PlayerAssessmentMateusz(PlayerAssessment):
+	def __init__(self):
+		super().__init__()
+		#self.symbolsWeights = [2.1, 2]
+		#self.emptyWeight = 1.1
+		self.symbolsWeights = [4.1, 4]
+		self.emptyWeight = 1.1
+
+	def chooseMove(self, game):
+		self.my_symbol = game.currentSymbol()
+		self.enemy_symbol = game.currentOppositeSymbol()
+
+		for i in range(len(self.board.arr)):
+			v = self.board.arr[i]
+			if v != 0:
+				self.assessments[i] = 0
+				continue
+			xy = self.board.indexToXY(i)
+			self.assessments[i] = self.assessField(i, xy, v)
+
+		return self.decision_assessment()
+
+
+	def assessField(self, index, posXY, value):
+		dirs = [ [1,-1], [1,0], [1,1], [0,1] ]
+
+		value = 0
+		for dir in dirs:
+			v1 = self.assessAxis(posXY, dir, self.my_symbol, 0)
+			v2 = self.assessAxis(posXY, dir, self.enemy_symbol, 1)
+			value += max(v1, v2) #TODO
+
+		return value
+
+	def assessAxis(self, start, dir, symbol, enemy):
+		start = np.array([int(x) for x in start])
+		dir = np.array(dir)
+
+		value = self.emptyWeight
+		for k in [1,-1]:
+			currentDir = dir * k
+			point = start
+			while True:
+				point = point + currentDir
+				if not self.board.isPositionInside(point):
+					break
+
+				symbol_at = self.board.symbolAt(point)
+				if symbol_at == symbol:
+					value *= self.symbolsWeights[enemy]
+				elif symbol_at == 0:
+					value *= self.emptyWeight
+				else:
+					break
+
+		return value
 
 
 if __name__ == "__main__":

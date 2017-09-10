@@ -20,6 +20,11 @@ class Game:
 			return self.board.X;
 		return self.board.O;
 
+	def currentOppositeSymbol(self):
+		if self.currentTurn % 2 != 0:
+			return self.board.X;
+		return self.board.O;
+
 	def symbolsInLine(self, startPoint, dir, symbol):
 		startPoint = np.array(startPoint)
 		dir = np.array(dir)
