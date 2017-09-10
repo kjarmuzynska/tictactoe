@@ -76,6 +76,7 @@ class PlayerAssessmentRank(PlayerAssessment):
 
 
 class PlayerAssessmentMateusz(PlayerAssessment):
+	dirs = [ [1,-1], [1,0], [1,1], [0,1] ]
 	def __init__(self, weights=[4.1, 4], emptyWeight = 1.1):
 		super().__init__()
 		#self.symbolsWeights = [2.1, 2]
@@ -99,10 +100,8 @@ class PlayerAssessmentMateusz(PlayerAssessment):
 
 
 	def assessField(self, index, posXY, value):
-		dirs = [ [1,-1], [1,0], [1,1], [0,1] ]
-
 		value = 0
-		for dir in dirs:
+		for dir in self.dirs:
 			v1 = self.assessAxis(posXY, dir, self.my_symbol, 0)
 			v2 = self.assessAxis(posXY, dir, self.enemy_symbol, 1)
 			value += max(v1, v2) #TODO
@@ -132,6 +131,19 @@ class PlayerAssessmentMateusz(PlayerAssessment):
 
 		return value
 
+
+class PlayerAssessmentMateusz2(PlayerAssessmentMateusz):
+	def __init__(self, weights=[4.1, 4], emptyWeight = 1.1):
+		super().__init__(weights, emptyWeight)
+
+	def assessField(self, index, posXY, value):
+		v1 = 1
+		v2 = 1
+
+		for dir in self.dirs:
+			v1 *= self.assessAxis(posXY, dir, self.my_symbol, 0)
+			v2 *= self.assessAxis(posXY, dir, self.enemy_symbol, 1)
+		return max(v1, v2)
 
 if __name__ == "__main__":
 	player = PlayerRandomAssessment()
