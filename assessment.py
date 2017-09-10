@@ -76,12 +76,12 @@ class PlayerAssessmentRank(PlayerAssessment):
 
 
 class PlayerAssessmentMateusz(PlayerAssessment):
-	def __init__(self):
+	def __init__(self, weights=[4.1, 4], emptyWeight = 1.1):
 		super().__init__()
 		#self.symbolsWeights = [2.1, 2]
 		#self.emptyWeight = 1.1
-		self.symbolsWeights = [4.1, 4]
-		self.emptyWeight = 1.1
+		self.symbolsWeights = weights
+		self.emptyWeight = emptyWeight
 
 	def chooseMove(self, game):
 		self.my_symbol = game.currentSymbol()
