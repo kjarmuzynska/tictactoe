@@ -102,8 +102,8 @@ class PlayerAssessmentMateusz(PlayerAssessment):
 	def assessField(self, index, posXY, value):
 		value = 0
 		for dir in self.dirs:
-			v1 = self.assessAxis(posXY, dir, self.my_symbol, 0)
-			v2 = self.assessAxis(posXY, dir, self.enemy_symbol, 1)
+			v1, _ = self.assessAxis(posXY, dir, self.my_symbol, 0)
+			v2, _ = self.assessAxis(posXY, dir, self.enemy_symbol, 1)
 			value += max(v1, v2) #TODO
 
 		return value
@@ -111,6 +111,7 @@ class PlayerAssessmentMateusz(PlayerAssessment):
 	def assessAxis(self, start, dir, symbol, enemy):
 		start = np.array([int(x) for x in start])
 		dir = np.array(dir)
+		symbols = 0
 
 		value = self.emptyWeight
 		for k in [1,-1]:
@@ -124,12 +125,13 @@ class PlayerAssessmentMateusz(PlayerAssessment):
 				symbol_at = self.board.symbolAt(point)
 				if symbol_at == symbol:
 					value *= self.symbolsWeights[enemy]
+					symbols += 1
 				elif symbol_at == 0:
 					value *= self.emptyWeight
 				else:
 					break
 
-		return value
+		return value, symbols
 
 
 class PlayerAssessmentMateusz2(PlayerAssessmentMateusz):
@@ -137,13 +139,26 @@ class PlayerAssessmentMateusz2(PlayerAssessmentMateusz):
 		super().__init__(weights, emptyWeight)
 
 	def assessField(self, index, posXY, value):
-		v1 = 1
-		v2 = 1
+		value = 0
 
+		cross = [0, 0]
 		for dir in self.dirs:
-			v1 *= self.assessAxis(posXY, dir, self.my_symbol, 0)
-			v2 *= self.assessAxis(posXY, dir, self.enemy_symbol, 1)
-		return max(v1, v2)
+			v1, x1 = self.assessAxis(posXY, dir, self.my_symbol, 0)
+			v2, x2 = self.assessAxis(posXY, dir, self.enemy_symbol, 1)
+
+			if x1 >= 2:
+				cross[0] += 1
+			if x2 >= 2:
+				cross[1] += 1
+
+
+			value += max(v1, v2) #TODO
+
+		if cross[1] > 1:
+			value *= 2
+
+		return value
+
 
 if __name__ == "__main__":
 	player = PlayerRandomAssessment()
